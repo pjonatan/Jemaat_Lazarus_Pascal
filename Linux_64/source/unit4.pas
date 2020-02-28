@@ -15,6 +15,7 @@ type
 
   TForm4 = class(TForm)
     Image1: TImage;
+    SaveDialog1: TSaveDialog;
     SG: TStringGrid;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -97,10 +98,16 @@ end;
 procedure TForm4.Image1Click(Sender: TObject);
 var
   pdf: TJPFpdf;
-  ct: Integer;
-  PdfY: Integer;
+  ct: integer;
+  PdfY: integer;
+  filename: string;
 
 begin
+  if SaveDialog1.Execute then
+  begin
+    filename := SaveDialog1.Filename;
+    ShowMessage('Diexport ke : ' + filename + '.pdf');
+  end;
   pdf:= TJPFpdf.Create(poPortrait,puMM,pfA4);
   pdf.AddPage();
   pdf.SetFont(ffHelvetica,fsBold,14);
@@ -134,7 +141,7 @@ begin
      pdf.SetX(165);
      pdf.Cell(35,7,Form4.SG.Cells[4,ct],'1',0,'L',0);
    end;
-  pdf.SaveToFile('/home/bt/Ulang_tahun_' + Tg + '.pdf');
+  pdf.SaveToFile(filename + '.pdf');
   pdf.Free;
   ShowMessage('Sudah diexport!');
 end;

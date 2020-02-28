@@ -111,4 +111,8 @@ object Form4: TForm4
       204
     )
   end
+  object SaveDialog1: TSaveDialog
+    left = 335
+    top = 57
+  end
 end
