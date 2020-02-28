@@ -9,3 +9,6 @@ Untuk yang Linux Amd64 program memerlukan sqlite driver yaitu:
 libsqlite3.so, file ini harus ditaru di /usr/lib/X86_64-linux-gnu
 
 Sqlite3 database nya harus berada dalam direktori yang sama.
+
+If someone need modification, please contact me at: pjtht@protonmail.com
+or there was something error please inform me too.
