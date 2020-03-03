@@ -6,13 +6,20 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Grids, DB, sqldb, sqlite3conn, Unit2, Unit3, Unit4, Global;
+  Grids, DB, sqldb, sqlite3conn, Unit2, Unit3, Unit4, Unit5, Unit6,
+   Unit7, Global;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
+    Image10: TImage;
+    Image5: TImage;
+    Image6: TImage;
+    Image7: TImage;
+    Image8: TImage;
+    Image9: TImage;
     Pekerjaan: TComboBox;
     Pendidikan: TComboBox;
     Edit1: TEdit;
@@ -24,15 +31,22 @@ type
     SG: TStringGrid;
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Image10Click(Sender: TObject);
     procedure Image1Click(Sender: TObject);
     procedure Image2Click(Sender: TObject);
     procedure Image3Click(Sender: TObject);
     procedure Image4Click(Sender: TObject);
-    procedure Ubah(sender: TObject; aCol, aRow: Integer);
+    procedure Image5Click(Sender: TObject);
+    procedure Image6Click(Sender: TObject);
+    procedure Image7Click(Sender: TObject);
+    procedure Image8Click(Sender: TObject);
+    procedure Image9Click(Sender: TObject);
+    procedure Ubah(sender: TObject; aCol, aRow: Integer;
+           const OldValue: string; var NewValue: String);
   private
 
   public
-    i: Integer;
+
   end;
 
 var
@@ -124,29 +138,31 @@ Case pkj of
  end;
 Form1.SG.Cells[12,Ind] := CHari(Qry.FieldByName('tg_update').AsDateTime);
 end;
-procedure TForm1.Image2Click(Sender: TObject);
-begin
-   Form2.Visible:=True;
-end;
-
-procedure TForm1.FormShow(Sender: TObject);
+procedure populate(Key: integer);
 var
+  i: integer;
   SCon : TSQLConnection;
   STran: TSQLTransaction;
   pQry : TSQLQuery;
-
 begin
   SCon  := TSQLite3Connection.Create(nil);
   STran := TSQLTransaction.Create(SCon);
   SCon.Transaction := STran;
   SCon.DatabaseName:='jemaat.db';
   pQry := TSQLQuery.Create(nil);
-  pQry.SQL.Text := 'select * from jemaat';
+  case Key of
+   1:
+      pQry.SQL.Text := 'select * from jemaat sort order by nama';
+   2:
+      pQry.SQL.Text := 'select * from jemaat sort order by alamat';
+   3:
+      pQry.SQL.Text := 'select * from jemaat sort order by no_anggota';
+  end;
   pQry.DataBase:= Scon;
   pQry.Open;
-  SG.Clean;
-  SG.TitleFont.Color:=clRed;
-  SG.TitleFont.Style:=[fsBold];
+  Form1.SG.Clean;
+  Form1.SG.TitleFont.Color:=clRed;
+  Form1.SG.TitleFont.Style:=[fsBold];
   i := 0;
   Create_Header;
   while not pQry.EOF do
@@ -160,6 +176,16 @@ begin
   pQry.Free;
   STran.Free;
   SCon.Free;
+end;
+
+procedure TForm1.Image2Click(Sender: TObject);
+begin
+   Form2.Visible:=True;
+end;
+
+procedure TForm1.FormShow(Sender: TObject);
+begin
+ populate(1);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -199,12 +225,17 @@ begin
    SCon.Free;
 end;
 
+procedure TForm1.Image10Click(Sender: TObject);
+begin
+  Form7.Visible:=True;
+end;
+
 procedure TForm1.Image1Click(Sender: TObject);
 var
    SCon : TSQLConnection;
    STran: TSQLTransaction;
    pQry : TSQLQuery;
-
+   i: integer;
 begin
   SCon  := TSQLite3Connection.Create(nil);
    STran := TSQLTransaction.Create(SCon);
@@ -245,7 +276,33 @@ begin
   Form3.Visible:=True;
 end;
 
-procedure TForm1.Ubah(sender: TObject; aCol, aRow: Integer);
+procedure TForm1.Image5Click(Sender: TObject);
+begin
+ Form6.Visible:=True;
+end;
+
+procedure TForm1.Image6Click(Sender: TObject);
+begin
+  Form5.Visible:= True;
+end;
+
+procedure TForm1.Image7Click(Sender: TObject);
+begin
+  populate(2);
+end;
+
+procedure TForm1.Image8Click(Sender: TObject);
+begin
+  populate(3);
+end;
+
+procedure TForm1.Image9Click(Sender: TObject);
+begin
+  populate(1);
+end;
+
+procedure TForm1.Ubah(sender: TObject; aCol, aRow: Integer;
+       const OldValue: string; var NewValue: String);
 var
   SCon : TSQLConnection;
   STran: TSQLTransaction;
